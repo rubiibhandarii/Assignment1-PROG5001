@@ -19,10 +19,20 @@ public class AssignmentStatistics {
                 if (mark >= 0 && mark <= 30) { //Only accepting valid mark inputs by user (0-30)
                     marks[i] = mark;
                     validInput = true;
-                } else {
-                    System.out.println("Invalid input! Please enter a mark between 0 and 30."); //F3: Validation for marks
+                } 
+                //F3: Validation for marks
+                else {
+                    System.out.println("Invalid input! Please enter a mark between 0 and 30."); //Validation for marks
                 }
             }
         }
+          // F4: Print assignment name and students' marks after users have finished entering the marks
+        System.out.println("Assignment Name: " + assignmentName);
+        System.out.println("Students' Marks:");
+        for (int i = 0; i < 30; i++) {
+            System.out.println("Student " + (i + 1) + ": " + marks[i]);
+        }
+        
+        
     }
 }
