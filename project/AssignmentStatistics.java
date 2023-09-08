@@ -33,6 +33,19 @@ public class AssignmentStatistics {
             System.out.println("Student " + (i + 1) + ": " + marks[i]);
         }
         
+        //F5: Print the highest mark and the lowest mark on the screen
+        int highestMark = marks[0];
+        int lowestMark = marks[0];
+        for (int mark : marks) {
+            if (mark > highestMark) {
+                highestMark = mark;
+            }
+            if (mark < lowestMark) {
+                lowestMark = mark;
+            }
+        }
+        System.out.println("Highest Mark: " + highestMark);
+        System.out.println("Lowest Mark: " + lowestMark);
         
     }
 }
