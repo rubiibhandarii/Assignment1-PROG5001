@@ -1,6 +1,48 @@
 import java.util.Scanner;
-
+/**
+ * This is a template to recieve students marks and assignment name 
+ * and find out highest, lowest marks,mean and standard deviation
+ * 
+ * @author (Rubi Bhandari)
+ * @version (version 1.0 08/09/2023)
+ */
 public class AssignmentStatistics {
+    
+    public static double sqrt(double x) {
+        if (x < 0) {
+            throw new IllegalArgumentException("Cannot calculate the square root of a negative number");
+        }
+
+        double guess = x;
+        double epsilon = 1e-15; // A small value to control the precision of the calculation
+
+        while (Math.abs(guess * guess - x) > epsilon * x) {
+            guess = 0.5 * (guess + x / guess); // Newton-Raphson formula
+        }
+
+        return guess;
+    }
+    
+    public static double pow(double base, double exponent) {
+        if (exponent == 0) {
+            return 1.0;
+        } else if (exponent < 0) {
+            return 1.0 / powerPositive(base, -exponent);
+        } else {
+            return powerPositive(base, exponent);
+        }
+    }
+
+    private static double powerPositive(double base, double exponent) {
+        double result = 1.0;
+        for (int i = 0; i < exponent; i++) {
+            result *= base;
+        }
+        return result;
+    }
+    
+    
+    
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -8,7 +50,6 @@ public class AssignmentStatistics {
         System.out.print("Enter the assignment name: ");
         String assignmentName = scanner.nextLine(); //Assignment name / value will be saved in assignmentName
        
-        
         // F2: Allows the user to input students' marks for assignment
         int[] marks = new int[30];
         for (int i = 0; i < 30; i++) { //Assuming there are 30 students in the unit
@@ -46,6 +87,22 @@ public class AssignmentStatistics {
         }
         System.out.println("Highest Mark: " + highestMark);
         System.out.println("Lowest Mark: " + lowestMark);
-        
+
+        //F6: Calculate and print the mean and standard deviation of the marks and 
+        double sum = 0;
+        for (int mark : marks) {
+            sum += mark;
+        }
+        double mean = sum / 30; //Formula for mean
+        double deviationSum = 0;
+        for (int mark : marks) {
+            deviationSum += pow(mark - mean, 2); //formula for standard deviation
+        }
+        double standardDeviation = sqrt(deviationSum / 30);
+
+        System.out.println("Mean: " + mean);
+        System.out.println("Standard Deviation: " + standardDeviation);
+
+        scanner.close();
     }
 }
