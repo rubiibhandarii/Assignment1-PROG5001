@@ -6,7 +6,9 @@ import java.util.Scanner;
  * @author (Rubi Bhandari)
  * @version (version 1.0 08/09/2023)
  */
-public class AssignmentStatistics {
+public class AssignmentStatistics 
+{
+    // instance variables- replace the example below with your own
     private String assignmentName; //Assignment name / value will be saved in 'assignmentName'
     private int[] marks; //Students' marks will be saved under 'marks'
 
@@ -111,8 +113,8 @@ public class AssignmentStatistics {
         return num;
     }
     
-    private static double pow(double base, double exponent) {
-        if (exponent == 0) {
+    private static double pow(double base, double exponent) { //Method to calculate power for standard deviation
+     if (exponent == 0) {
             return 1.0;
         } else if (exponent < 0) {
             return 1.0 / powerPositive(base, -exponent);
@@ -129,7 +131,7 @@ public class AssignmentStatistics {
         return result;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { //Method to print assignment name, student marks, highest marks, lowest marks, mean and standard deviation
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter the assignment name: ");
