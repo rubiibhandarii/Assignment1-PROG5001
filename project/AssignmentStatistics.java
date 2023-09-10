@@ -7,51 +7,18 @@ import java.util.Scanner;
  * @version (version 1.0 08/09/2023)
  */
 public class AssignmentStatistics {
-    
-    public static double sqrt(double x) {
-        if (x < 0) {
-            throw new IllegalArgumentException("Cannot calculate the square root of a negative number");
-        }
+    private String assignmentName; //Assignment name / value will be saved in 'assignmentName'
+    private int[] marks; //Students' marks will be saved under 'marks'
 
-        double guess = x;
-        double epsilon = 1e-15; // A small value to control the precision of the calculation
-
-        while (Math.abs(guess * guess - x) > epsilon * x) {
-            guess = 0.5 * (guess + x / guess); // Newton-Raphson formula
-        }
-
-        return guess;
+    //F1: Allows the user to input the assignment name
+    public AssignmentStatistics(String assignmentName) {
+        this.assignmentName = assignmentName;
+        this.marks = new int[30];
     }
     
-    public static double pow(double base, double exponent) {
-        if (exponent == 0) {
-            return 1.0;
-        } else if (exponent < 0) {
-            return 1.0 / powerPositive(base, -exponent);
-        } else {
-            return powerPositive(base, exponent);
-        }
-    }
-
-    private static double powerPositive(double base, double exponent) {
-        double result = 1.0;
-        for (int i = 0; i < exponent; i++) {
-            result *= base;
-        }
-        return result;
-    }
-    
-    
-    
-    public static void main(String[] args) {
+    // F2: Allows the user to input students' marks for assignment
+    public void inputStudentMarks() {
         Scanner scanner = new Scanner(System.in);
-
-        //F1: Allows the user to input the assignment name
-        System.out.print("Enter the assignment name: ");
-        String assignmentName = scanner.nextLine(); //Assignment name / value will be saved in assignmentName
-       
-        // F2: Allows the user to input students' marks for assignment
-        int[] marks = new int[30];
         for (int i = 0; i < 30; i++) { //Assuming there are 30 students in the unit
             boolean validInput = false;
             while (!validInput) {
@@ -63,45 +30,120 @@ public class AssignmentStatistics {
                 } 
                 //F3: Validation for marks
                 else {
-                    System.out.println("Invalid input! Please enter a mark between 0 and 30."); //Validation for marks
+                    System.out.println("Invalid input! Please enter a mark between 0 and 30.");
                 }
             }
         }
-          // F4: Print assignment name and students' marks after users have finished entering the marks
+        scanner.close();
+    }
+
+    // F4: Print assignment name and students' marks after users have finished entering the marks
+    public void printAssignmentInfo() {
         System.out.println("Assignment Name: " + assignmentName);
         System.out.println("Students' Marks:");
         for (int i = 0; i < 30; i++) {
             System.out.println("Student " + (i + 1) + ": " + marks[i]);
         }
-        
-        //F5: Print the highest mark and the lowest mark on the screen
+    }
+
+    //F5: Print the highest mark on the screen
+    public int getHighestMark() {
         int highestMark = marks[0];
-        int lowestMark = marks[0];
         for (int mark : marks) {
             if (mark > highestMark) {
                 highestMark = mark;
             }
+        }
+        return highestMark;
+    }
+    
+    //F5: Print the lowest mark on the screen
+    public int getLowestMark() {
+        int lowestMark = marks[0];
+        for (int mark : marks) {
             if (mark < lowestMark) {
                 lowestMark = mark;
             }
         }
-        System.out.println("Highest Mark: " + highestMark);
-        System.out.println("Lowest Mark: " + lowestMark);
+        return lowestMark;
+    }
 
-        //F6: Calculate and print the mean and standard deviation of the marks and 
+    //F6: Calculate and print the mean of the marks
+    public double calculateMean() {
         double sum = 0;
         for (int mark : marks) {
             sum += mark;
         }
-        double mean = sum / 30; //Formula for mean
+        return sum / 30;
+    }
+    
+    //F6: Calculate and print the standard deviation of the marks
+    public double calculateStandardDeviation() {
+        double mean = calculateMean();
         double deviationSum = 0;
         for (int mark : marks) {
-            deviationSum += pow(mark - mean, 2); //formula for standard deviation
+            deviationSum += pow(mark - mean, 2);
         }
-        double standardDeviation = sqrt(deviationSum / 30);
+        double epsilon = 1e-7; // Tolerance for the approximation
+        return sqrt(deviationSum / 30, epsilon);
+    }
+    
+    private static double sqrt(double x, double epsilon) {
+        //Throws error incase of negative marks input by the user.
+        if (x < 0) {
+            throw new IllegalArgumentException("Marks cannot be negative.");
+        }
 
-        System.out.println("Mean: " + mean);
-        System.out.println("Standard Deviation: " + standardDeviation);
+        if (x == 0) {
+            return 0;
+        }
+
+        double num = x / 2.0; // Initial variable
+        double prevGuess;
+        double prevSquared;
+        
+        do {
+            prevGuess = num;
+            prevSquared = prevGuess * prevGuess;
+            num = 0.5 * (prevGuess + x / prevGuess); // Babylonian method to calculate square root for standard deviation
+        } while (prevSquared - x >= epsilon * epsilon);
+
+        return num;
+    }
+    
+    private static double pow(double base, double exponent) {
+        if (exponent == 0) {
+            return 1.0;
+        } else if (exponent < 0) {
+            return 1.0 / powerPositive(base, -exponent);
+        } else {
+            return powerPositive(base, exponent);
+        }
+    }
+    
+    private static double powerPositive(double base, double exponent) {
+        double result = 1.0;
+        for (int i = 0; i < exponent; i++) {
+            result *= base;
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the assignment name: ");
+        String assignmentName = scanner.nextLine();
+
+        AssignmentStatistics assignment = new AssignmentStatistics(assignmentName);
+
+        assignment.inputStudentMarks();
+        assignment.printAssignmentInfo();
+
+        System.out.println("Highest Mark: " + assignment.getHighestMark());
+        System.out.println("Lowest Mark: " + assignment.getLowestMark());
+        System.out.println("Mean: " + assignment.calculateMean());
+        System.out.println("Standard Deviation: " + assignment.calculateStandardDeviation());
 
         scanner.close();
     }
